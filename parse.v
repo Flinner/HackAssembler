@@ -1,15 +1,13 @@
 module main
 
-// type Line = string
-
 struct CInstruction {
-	comp byte
-	dest byte
-	jump byte
+	comp string
+	dest string
+	jump string
 }
 
 struct AInstruction {
-	value u16
+	value string
 }
 
 type MObject = AInstruction | CInstruction
@@ -17,11 +15,31 @@ type MObject = AInstruction | CInstruction
 fn parse_line(line string) ?MObject {
 	// remove comments
 	cmd := clean_line(line) ?
+	mut mobject := MObject{}
 
-	print('cmd.len: $cmd | $cmd.len')
-	println('')
+	if cmd[0] == `@` {
+		mobject = parse_a_instruction(cmd[1..])
+	} else {
+		mobject = parse_c_instruction(cmd)
+	}
 
-	return MObject{}
+	return mobject
+}
+
+// input without the '@'
+fn parse_a_instruction(cmd string) AInstruction {
+	// bits := decbin(cmd.u16())
+	return AInstruction{
+		value: cmd
+	}
+}
+
+fn parse_c_instruction(cmd string) CInstruction {
+	return CInstruction{
+		comp: comp(cmd)
+		dest: dest(cmd)
+		jump: jump(cmd)
+	}
 }
 
 // clean_line removes comments and whitespace
