@@ -1,7 +1,7 @@
 module main
 
 struct CInstruction {
-	comp string
+	comp string // includes a field
 	dest string
 	jump string
 }
@@ -10,27 +10,26 @@ struct AInstruction {
 	value string
 }
 
-type MObject = AInstruction | CInstruction
+// type MObject = AInstruction | CInstruction
+
+interface MObject {
+	to_asm() string
+}
 
 fn parse_line(line string) ?MObject {
 	// remove comments
 	cmd := clean_line(line) ?
-	mut mobject := MObject{}
-
-	if cmd[0] == `@` {
-		mobject = parse_a_instruction(cmd[1..])
+	return if cmd[0] == `@` {
+		MObject(parse_a_instruction(cmd))
 	} else {
-		mobject = parse_c_instruction(cmd)
+		MObject(parse_c_instruction(cmd))
 	}
-
-	return mobject
 }
 
 // input without the '@'
 fn parse_a_instruction(cmd string) AInstruction {
-	// bits := decbin(cmd.u16())
 	return AInstruction{
-		value: cmd
+		value: cmd[1..]
 	}
 }
 
@@ -53,4 +52,15 @@ fn clean_line(line string) ?string {
 		return error('log: empty line')
 	}
 	return cmd
+}
+
+fn (a AInstruction) to_asm() string {
+	return decbin(a.value.u16())
+}
+
+fn (c CInstruction) to_asm() string {
+	comp := comp_map[c.comp]
+	dest := dest_map[c.dest]
+	jump := jump_map[c.jump]
+	return '111$comp$dest$jump'
 }
