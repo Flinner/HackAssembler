@@ -56,7 +56,7 @@ fn defer_hack(mut asm_lines []string, lines []string) {
 
 				deferred_functions << Deferred{
 					i: i
-					asm_lines: &mut asm_lines
+					asm_lines: mut asm_lines
 					instruction: parsed
 					symbols: mut symbols
 				}
