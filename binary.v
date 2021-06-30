@@ -1,7 +1,7 @@
 module main
 
 // tf! no way to convert ints to binary :|
-
+// decbin converts to binary
 fn decbin(n u16) string {
 	mut s := []string{len: 16, init: '0'}
 	mut u := n
@@ -65,16 +65,4 @@ const jump_map = map{
 	'JNE':  '101'
 	'JLE':  '110'
 	'JMP':  '111'
-}
-
-fn comp(cmd string) string {
-	return cmd.find_between('=', ';')
-}
-
-fn dest(cmd string) string {
-	return if cmd.contains('=') { cmd.all_before('=') } else { 'null' }
-}
-
-fn jump(cmd string) string {
-	return if cmd.contains(';') { cmd.all_after(';') } else { 'null' }
 }
