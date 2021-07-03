@@ -1,5 +1,7 @@
 module main
 
+import strconv
+
 struct CInstruction {
 	comp string // includes a field
 	dest string
@@ -64,7 +66,11 @@ fn clean_line(line string) ?string {
 }
 
 fn (a AInstruction) to_asm(mut symbols Symbols) string {
-	value := symbols[a.value] or { a.value.int() }
+	// either
+	//1. symbol is known
+	//2. is a number
+	//3 create symbol
+	value := symbols[a.value] or { strconv.atoi(a.value) or {symbols.new(a.value)} }
 	return decbin(value)
 }
 

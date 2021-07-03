@@ -4,6 +4,7 @@ type Symbols = map[string]int
 
 fn init_symbols() Symbols {
 	symbols := map{
+		'__last_allocated__':  15// for allocating extra symbols
 		'R0':  0
 		'R1':  1
 		'R2':  2
@@ -20,12 +21,23 @@ fn init_symbols() Symbols {
 		'R13': 13
 		'R14': 14
 		'R15': 15
+		'SP': 0
+		'LCL': 1
+		'ARG': 2
+		'THIS': 3
+		'THAT': 4
+		'SCREEN': 16384
+		'KBD': 24576
 	}
 	return symbols
 }
 
-fn (symbols Symbols) new(label string) int {
-	return 8
+fn (mut symbols Symbols) new(label string) int {
+	a := symbols['__last_allocated__'] +1
+	symbols[label]= a
+	
+	symbols['__last_allocated__'] = a
+	return a
 }
 
 fn (mut symbols Symbols) write(label string, i int) {

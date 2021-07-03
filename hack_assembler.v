@@ -17,6 +17,7 @@ fn main() {
 		// add labels to symbol map
 		if cleaned[0] == `(` {
 			symbols.write(label(cleaned), i)
+			continue
 		}
 		i++
 	}
