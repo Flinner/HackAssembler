@@ -1,7 +1,5 @@
 module main
 
-import strconv
-
 struct CInstruction {
 	comp string // includes a field
 	dest string
@@ -16,23 +14,19 @@ struct Label {
 	name string
 }
 
-// type MObject = AInstruction | CInstruction
+// type MObject = AInstruction | CInstruction | Label
 
-interface MObject {
-	to_asm(mut Symbols) string
-}
-
-fn parse_line(line string) ?MObject {
-	// remove comments
-	cmd := clean_line(line) ?
-	return if cmd[0] == `@` {
-		MObject(parse_a_instruction(cmd))
-	} else if cmd[0] == `(` {
-		MObject(parse_label(cmd))
-	} else {
-		MObject(parse_c_instruction(cmd))
-	}
-}
+// fn parse_line(line string) ?MObject {
+//	// remove comments
+//	cmd := clean_line(line) ?
+//	return if cmd[0] == `@` {
+//		MObject(parse_a_instruction(cmd))
+//	} else if cmd[0] == `(` {
+//		MObject(parse_label(cmd))
+//	} else {
+//		MObject(parse_c_instruction(cmd))
+//	}
+//}
 
 // input without the '@'
 fn parse_a_instruction(cmd string) AInstruction {
@@ -70,13 +64,8 @@ fn clean_line(line string) ?string {
 }
 
 fn (a AInstruction) to_asm(mut symbols Symbols) string {
-	// cases
-	// 1. its is a predefined symbols, (R1,SCREEN,..), just return the map
-	// 2. its is a variable (1,2,3...), return it
-	// 3. new symbol, write it to the symbols map, return its value
-	value := strconv.atoi(a.value) or { (symbols[a.value] or { symbols.new(a.value) }) }
-	println('a inst: $value')
-	return decbin(a.value.u16())
+	value := symbols[a.value] or { a.value.int() }
+	return decbin(value)
 }
 
 fn (c CInstruction) to_asm(mut symbols Symbols) string {
@@ -84,10 +73,6 @@ fn (c CInstruction) to_asm(mut symbols Symbols) string {
 	dest := dest_map[c.dest]
 	jump := jump_map[c.jump]
 	return '111$comp$dest$jump'
-}
-
-fn (a Label) to_asm(mut symbols Symbols) string {
-	return 'TODO'
 }
 
 fn comp(cmd string) string {

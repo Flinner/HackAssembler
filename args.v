@@ -6,7 +6,6 @@ import os.cmdline
 fn handle_args() Settings {
 	args := os.args.clone()[1..]
 
-	println('args: $args')
 	filename := cmdline.only_non_options(args)[0]
 
 	// if filename.len < 1 {

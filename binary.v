@@ -2,7 +2,7 @@ module main
 
 // tf! no way to convert ints to binary :|
 // decbin converts to binary
-fn decbin(n u16) string {
+fn decbin(n int) string {
 	mut s := []string{len: 16, init: '0'}
 	mut u := n
 
