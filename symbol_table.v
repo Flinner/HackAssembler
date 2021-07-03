@@ -24,6 +24,10 @@ fn init_symbols() Symbols {
 	return symbols
 }
 
-fn (map Symbols) new(label string) int {
-	return 99
+fn (symbols Symbols) new(label string) int {
+	return 8
+}
+
+fn (mut symbols Symbols) write(label string, i int) {
+	symbols[label] = i
 }
